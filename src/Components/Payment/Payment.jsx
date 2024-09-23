@@ -22,6 +22,7 @@ const VerifyPayment = () => {
 
     if (fetchedClientTxnId) setClientTxnId(fetchedClientTxnId);
     if (fetchedTxnId) setTxnId(fetchedTxnId);
+    verifyPayment();
   }, [searchParams]);
 
   // Function to verify payment
@@ -59,35 +60,7 @@ const VerifyPayment = () => {
   return (
     <div>
       <h2>Verify Payment</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          verifyPayment(); // Call the verification function
-        }}
-      >
-        <div>
-          <label>Client Transaction ID:</label>
-          <input
-            type="text"
-            value={clientTxnId}
-            onChange={(e) => setClientTxnId(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Transaction ID:</label>
-          <input
-            type="text"
-            value={txnId}
-            onChange={(e) => setTxnId(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Verifying..." : "Verify Payment"}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
+      <h1>{clientTxnId}</h1>
     </div>
   );
 };
