@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/authContext";
 
 const ViewShiftPlans = () => {
   const { shiftId } = useParams();
-  const Navigate = useNavigate();
   const { user } = useAuth();
   const [shiftData, setShiftData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -71,10 +70,17 @@ const ViewShiftPlans = () => {
           },
         }
       )
-      .then((response) => {
-        // Redirect to the payment URL received from the backend
-        console.log(response.data.data);
-        window.location.href = response.data.data.payment_url;
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const paymentUrl = data.data.payment_url;
+          console.log("Order Response:", data.data);
+          console.log("Payment URL:", paymentUrl);
+          // Redirect to payment URL or display it
+          window.location.href = paymentUrl; // Example: redirecting to payment
+        } else {
+          console.error(data.message);
+        }
       })
       .catch((error) => {
         console.error("Error enrolling:", error);

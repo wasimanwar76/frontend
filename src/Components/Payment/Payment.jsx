@@ -27,15 +27,17 @@ const VerifyPayment = () => {
   // Function to verify payment
   const verifyPayment = async () => {
     try {
-      // const apiKey = process.env.REACT_APP_UPIGATEWAY_API_KEY; // Store your API key in an environment variable
+      const apiKey = "a809e24e-34fd-43c0-aac0-075394bf150b"; // Store your API key in an environment variable
       const response = await axios.post(
         "https://api.ekqr.in/api/check_order_status",
         {
-          key: "a809e24e-34fd-43c0-aac0-075394bf150b",
+          key: apiKey,
           client_txn_id: clientTxnId,
           txn_date: txnId, // Make sure txn_date is formatted correctly
         }
       );
+
+      console.log("Response", response);
 
       if (response.data.status && response.data.data.txn_status === "success") {
         setMessage(SUCCESS_MESSAGE);
