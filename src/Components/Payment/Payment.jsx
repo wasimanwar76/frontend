@@ -22,40 +22,44 @@ const VerifyPayment = () => {
 
     if (fetchedClientTxnId) setClientTxnId(fetchedClientTxnId);
     if (fetchedTxnId) setTxnId(fetchedTxnId);
-    verifyPayment();
   }, [searchParams]);
 
   // Function to verify payment
-  const verifyPayment = async () => {
-    if (!clientTxnId) return;
 
-    setLoading(true);
-    setMessage(""); // Reset message before new verification
+  useEffect(() => {
+    const verifyPayment = async () => {
+      if (!clientTxnId) return;
 
-    try {
-      const todayDate = new Date().toLocaleDateString("en-GB"); // Format as "DD-MM-YYYY"
-      const response = await axios.post(
-        `https://api.ekqr.in/api/check_order_status`,
-        {
-          key: "a809e24e-34fd-43c0-aac0-075394bf150b",
-          client_txn_id: clientTxnId,
-          txn_date: todayDate,
-        }
-      );
+      setLoading(true);
+      setMessage(""); // Reset message before new verification
 
-      // Check the response to determine the payment status
-      if (response.data.status === "success") {
-        setMessage(SUCCESS_MESSAGE);
-      } else {
+      try {
+        const todayDate = new Date().toLocaleDateString("en-GB"); // Format as "DD-MM-YYYY"
+        const response = await axios.post(
+          `https://api.ekqr.in/api/check_order_status`,
+          {
+            key: "a809e24e-34fd-43c0-aac0-075394bf150b",
+            client_txn_id: clientTxnId,
+            txn_date: todayDate,
+          }
+        );
+        console.log("Respomse", response);
+
+        //   // Check the response to determine the payment status
+        //   if (response.data.status === "success") {
+        //     setMessage(SUCCESS_MESSAGE);
+        //   } else {
+        //     setMessage(FAILURE_MESSAGE);
+        //   }
+      } catch (error) {
+        console.error("Error verifying payment:", error);
         setMessage(FAILURE_MESSAGE);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error verifying payment:", error);
-      setMessage(FAILURE_MESSAGE);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    verifyPayment();
+  }, [clientTxnId, txnId]);
 
   return (
     <div>

@@ -59,6 +59,10 @@ const router = createBrowserRouter([
             path: ":shiftId/view-plans",
             element: <ViewShifPlans />,
           },
+          {
+            path: "payment-verification",
+            element: <VerifyPayment />,
+          },
         ],
       },
       {
@@ -86,10 +90,6 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <PageNotFound />,
-      },
-      {
-        path: "payment-verification",
-        element: <VerifyPayment />,
       },
     ],
   },
