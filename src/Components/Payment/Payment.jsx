@@ -13,7 +13,7 @@ const VerifyPayment = () => {
   const [clientTxnId, setClientTxnId] = useState("");
   const [txnId, setTxnId] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // useEffect to update state when component mounts
   useEffect(() => {
@@ -25,46 +25,52 @@ const VerifyPayment = () => {
   }, [searchParams]);
 
   // Function to verify payment
+  const verifyPayment = async () => {
+    try {
+      // const apiKey = process.env.REACT_APP_UPIGATEWAY_API_KEY; // Store your API key in an environment variable
+      const response = await axios.post(
+        "https://api.ekqr.in/api/check_order_status",
+        {
+          key: "a809e24e-34fd-43c0-aac0-075394bf150b",
+          client_txn_id: clientTxnId,
+          txn_date: txnId, // Make sure txn_date is formatted correctly
+        }
+      );
 
-  // useEffect(() => {
-  //   const verifyPayment = async () => {
-  //     if (!clientTxnId) return;
+      if (response.data.status && response.data.data.txn_status === "success") {
+        setMessage(SUCCESS_MESSAGE);
+      } else {
+        setMessage(FAILURE_MESSAGE);
+      }
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      setMessage(FAILURE_MESSAGE);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //     setLoading(true);
-  //     setMessage(""); // Reset message before new verification
-
-  //     try {
-  //       const todayDate = new Date().toLocaleDateString("en-GB"); // Format as "DD-MM-YYYY"
-  //       const response = await axios.post(
-  //         `https://api.ekqr.in/api/check_order_status`,
-  //         {
-  //           key: "a809e24e-34fd-43c0-aac0-075394bf150b",
-  //           client_txn_id: clientTxnId,
-  //           txn_date: todayDate,
-  //         }
-  //       );
-  //       console.log("Respomse", response);
-
-  //       //   // Check the response to determine the payment status
-  //       //   if (response.data.status === "success") {
-  //       //     setMessage(SUCCESS_MESSAGE);
-  //       //   } else {
-  //       //     setMessage(FAILURE_MESSAGE);
-  //       //   }
-  //     } catch (error) {
-  //       console.error("Error verifying payment:", error);
-  //       setMessage(FAILURE_MESSAGE);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   verifyPayment();
-  // }, [clientTxnId, txnId]);
+  // Trigger payment verification when the component mounts
+  useEffect(() => {
+    if (clientTxnId && txnId) {
+      verifyPayment();
+    } else {
+      setLoading(false); // Stop loading if no IDs
+    }
+  }, [clientTxnId, txnId]);
 
   return (
     <div>
       <h2>Verify Payment</h2>
-      <h1>{clientTxnId}</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          <h3>Client Transaction ID: {clientTxnId}</h3>
+          <h3>Transaction ID: {txnId}</h3>
+          <p>{message}</p>
+        </div>
+      )}
     </div>
   );
 };
