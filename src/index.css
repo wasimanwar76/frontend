@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* App.css */
+body {
+    -webkit-user-select: none; /* For Safari and Chrome (WebKit) */
+    -moz-user-select: none;    /* For Firefox */
+    -ms-user-select: none;     /* For Internet Explorer/Edge */
+    user-select: none;         /* Standard syntax */
+}
+  
