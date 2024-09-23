@@ -24,23 +24,47 @@ const VerifyPayment = () => {
 
     if (fetchedClientTxnId) setClientTxnId(fetchedClientTxnId);
     if (fetchedTxnId) setTxnId(fetchedTxnId);
-    const veriyPayment = async () => {
-      const todayDate = new Date().toLocaleDateString("en-GB"); // Format as "DD-MM-YYYY"
-      const response = await axios.post(
-        `https://api.ekqr.in/api/check_order_status`,
-        {
-          key: "a809e24e-34fd-43c0-aac0-075394bf150b",
-          client_txn_id: clientTxnId,
-          txn_date: todayDate,
+
+    const verifyPayment = async () => {
+      if (clientTxnId) {
+        setLoading(true);
+        try {
+          const todayDate = new Date().toLocaleDateString("en-GB"); // Format as "DD-MM-YYYY"
+          const response = await axios.post(
+            `https://api.ekqr.in/api/check_order_status`,
+            {
+              key: "a809e24e-34fd-43c0-aac0-075394bf150b",
+              client_txn_id: clientTxnId,
+              txn_date: todayDate,
+            }
+          );
+          console.log(response);
+
+          // Check the response to determine the payment status
+          if (response.data.status === "success") {
+            setMessage(SUCCESS_MESSAGE);
+          } else {
+            setMessage(FAILURE_MESSAGE);
+          }
+        } catch (error) {
+          console.error("Error verifying payment:", error);
+          setMessage(FAILURE_MESSAGE);
+        } finally {
+          setLoading(false);
         }
-      );
-      console.log(response);
+      }
     };
-    veriyPayment();
-  }, [clientTxnId]);
+    verifyPayment();
+  }, [clientTxnId, searchParams]);
 
   // Function to handle payment verification (implement verification logic here)
-  const handleVerify = async () => {};
+  const handleVerify = async () => {
+    setLoading(true);
+    setMessage(""); // Reset message before new verification
+    await verifyPayment(); // Call the verification function
+    setLoading(false);
+  };
+
   return (
     <div>
       <h2>Verify Payment</h2>
