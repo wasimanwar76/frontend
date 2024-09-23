@@ -15,7 +15,7 @@ const ViewShiftPlans = () => {
   async function fetchShiftData() {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/student/shift/${shiftId}`,
+        `https://backend-xviy.onrender.com/api/student/shift/${shiftId}`,
         {
           headers: {
             Authorization: `${user?.token}`,
@@ -60,7 +60,7 @@ const ViewShiftPlans = () => {
     // Send data to backend
     axios
       .post(
-        "http://localhost:5000/api/student/enroll", // Adjust API endpoint
+        "https://backend-xviy.onrender.com/api/student/enroll", // Adjust API endpoint
         {
           shiftId, // shift ID from params
           subscription_type: type, // selected subscription type
